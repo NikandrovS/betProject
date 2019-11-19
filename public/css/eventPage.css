@@ -19,6 +19,11 @@ a:active {
     width: 400px;
     margin: 0 auto;
 }
+.topBets {
+    width: 400px;
+    margin: 0 auto;
+    text-align: center;
+}
 h3 {
     margin: 0;
 }

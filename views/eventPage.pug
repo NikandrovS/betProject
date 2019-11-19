@@ -5,7 +5,8 @@ html
         title TEST
         link(rel='stylesheet', href='./css/eventPage.css')
     body
-        h1.logo Sanriko`s bets
+        a(href='/main')
+            h1.logo Sanriko`s bets
         each item in renderPage
             div(class="event")
                 div.title
@@ -27,3 +28,7 @@ html
                         h4= item.result2
                         p Исход 2
                         p= '×' + ((sum / item.total2) / 100 * 97.5).toFixed(2)
+        div.topBets
+            h3 TOP 5 BETS
+            each item in betList
+                p= item.player + ' ' + item.bet + ' монет'

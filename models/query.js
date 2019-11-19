@@ -16,7 +16,10 @@ const crud = {
             ORDER BY status;`,[Number(id)]);
     },
     getBets: async (id) => {
-        return query(`SELECT * FROM deposits where event_id='?';`, [Number(id)]);
+        return query(`SELECT bet1 + bet2 as bet, player FROM deposits
+            where event_id='?'
+            order by bet desc
+            LIMIT 5 OFFSET 0;`, [Number(id)]);
     }
 };
 module.exports = crud;
