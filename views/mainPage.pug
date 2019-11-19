@@ -9,7 +9,7 @@ html
         div.pool
             each item in renderPage
                 div(class="event" + ' ' + item.status)
-                    a(class='event' href='/' + item.id)
+                    a(href='/' + item.id)
                         div.title
                             span.id= '#' + item.id
                             h3= item.event

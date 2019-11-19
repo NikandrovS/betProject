@@ -16,8 +16,9 @@ a:active {
     color: black;
 }
 .event {
-    width: 400px;
+    width: 380px;
     margin: 0 auto;
+    padding: 10px;
 }
 .event:hover {
     box-shadow: 0 0 10px rgba(0,0,0,0.5)
