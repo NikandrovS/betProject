@@ -1,0 +1,53 @@
+body {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+
+}
+.logo {
+    width: 200px;
+    margin: 0 auto;
+}
+a {
+    color: black;
+    text-decoration: none;
+}
+a:active {
+    color: black;
+}
+.event {
+    width: 400px;
+    margin: 0 auto;
+}
+.event:hover {
+    box-shadow: 0 0 10px rgba(0,0,0,0.5)
+}
+.past {
+    opacity: 0.25;
+}
+h3 {
+    margin: 0px;
+}
+.title {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+.ratio {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.deadLine {
+    margin: 0px;
+}
+.condition {
+    text-align: center;
+    display: flex;
+    justify-content: space-evenly;
+}
+.id {
+    align-self: flex-end;
+}
+h3 {
+}

@@ -1,0 +1,29 @@
+doctype html
+html
+    head
+        meta(charset="utf8")
+        title TEST
+        link(rel='stylesheet', href='./css/eventPage.css')
+    body
+        h1.logo Sanriko`s bets
+        each item in renderPage
+            div(class="event")
+                div.title
+                    span.id= '#' + item.id
+                    h3= item.event
+                div.condition
+                    - var sum = item.total1 + item.total2
+                    div.result1
+                        h4= item.result1
+                        p Исход 1
+                        p= '×' + ((sum / item.total1) / 100 * 97.5).toFixed(2)
+                    div.ratio
+                        - var win1 = ( Math.round(item.total1 / sum * 100) )
+                        - var win2 = ( Math.round(item.total2 / sum * 100) )
+                        p= win1 + '%' + ' × ' + win2 + '%'
+                        p= 'Всего монет поставленно ' + (item.total1 + item.total2)
+                        p.deadLine= 'Прием ставок до: ' + item.until
+                    div.result2
+                        h4= item.result2
+                        p Исход 2
+                        p= '×' + ((sum / item.total2) / 100 * 97.5).toFixed(2)
