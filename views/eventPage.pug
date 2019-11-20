@@ -3,7 +3,7 @@ html
     head
         meta(charset="utf8")
         title TEST
-        link(rel='stylesheet', href='./css/eventPage.css')
+        link(rel='stylesheet', href='../css/eventPage.css')
     body
         a(href='/main')
             h1.logo Sanriko`s bets
@@ -31,4 +31,5 @@ html
         div.topBets
             h3 TOP 5 BETS
             each item in betList
-                p= item.player + ' ' + item.bet + ' монет'
+                ul
+                    li= item.player + ' ' + item.bet + ' монет'
