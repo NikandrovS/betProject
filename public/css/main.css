@@ -15,7 +15,33 @@ a {
 a:active {
     color: black;
 }
-.event {
+.addForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.inputTitle {
+    width: 177px;
+}
+input {
+    margin: 5px;
+}
+.inputs {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 320px;
+    margin: 10px;
+}
+.until {
+    width: 40px;
+}
+.addResults {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.addForm, .event {
     width: 380px;
     margin: 0 auto;
     padding: 10px;
@@ -28,6 +54,7 @@ a:active {
 }
 h3 {
     margin: 0px;
+    text-align: center;
 }
 .title {
     display: flex;

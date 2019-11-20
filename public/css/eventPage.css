@@ -27,6 +27,12 @@ a:active {
 h3 {
     margin: 0;
 }
+ul {
+    padding: 0;
+}
+li {
+    list-style-type: none;
+}
 .title {
     display: flex;
     align-items: center;
@@ -47,4 +53,7 @@ h3 {
 }
 .id {
     align-self: flex-end;
+}
+.topBets {
+    margin-top: 20px;
 }
