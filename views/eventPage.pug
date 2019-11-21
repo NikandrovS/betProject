@@ -7,6 +7,21 @@ html
     body
         a(href='/main')
             h1.logo Sanriko`s bets
+        form(method="post" class="newBet")
+            div.betHead
+                label
+                    span Исход
+                    input(type="list" class="result" name="result" list="result" maxlength="1" required)
+                    datalist#result
+                        option 1
+                        option 2
+                label
+                    span Ставка
+                    input(type="text" class="bet" name="sum" maxlength="30" required)
+            label
+                span Игрок
+                input(type="text" name="player" maxlength="30" required)
+            input(type="submit" value="Добавить")
         each item in renderPage
             div(class="event")
                 div.title
