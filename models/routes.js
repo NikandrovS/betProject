@@ -11,8 +11,7 @@ router
         await ctx.render('mainPage', {renderPage})
     })
     .post('/main', async(ctx) => {
-        let newEvent = ctx.request.body;
-        await database.createEvent(newEvent);
+        await database.createEvent(ctx.request.body);
         let lastId = await database.getLastId();
         ctx.redirect('/event/' + lastId[0].id);
     })
@@ -20,6 +19,11 @@ router
         let betList = await database.getBets(ctx.params.id);
         let renderPage = await database.getById(ctx.params.id);
         await ctx.render('eventPage', {renderPage, betList})
+    })
+    .post('/event/:id', async(ctx) => {
+        ctx.request.body.id = ctx.params.id;
+        await database.addNewBet(ctx.request.body);
+        ctx.redirect('/event/' + ctx.params.id);
     })
     .get('/2', async(ctx) => {
         ctx.body = await database.getAll();

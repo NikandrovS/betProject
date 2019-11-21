@@ -18,8 +18,9 @@ const crud = {
             ORDER BY status;`, [Number(id)]);
     },
     getBets: async (id) => {
-        return query(`SELECT bet1 + bet2 as bet, player FROM deposits
+        return query(`SELECT sum(bet1)+sum(bet2) as bet, player FROM deposits
             WHERE event_id = ?
+            GROUP BY player
             ORDER BY bet desc
             LIMIT 5 OFFSET 0;`, [Number(id)]);
     },
@@ -29,6 +30,10 @@ const crud = {
     },
     getLastId: async () => {
         return query(`SELECT max(id) AS id FROM ${tableName}`);
+    },
+    addNewBet: async ( {result, sum, player, id} ) => {
+        return query(`INSERT INTO deposits (event_id, bet?, player) 
+            VALUES (?, ?, ?);`, [Number(result), Number(id), Number(sum), player]);
     },
 };
 module.exports = crud;

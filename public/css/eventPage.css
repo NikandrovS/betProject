@@ -15,6 +15,27 @@ a {
 a:active {
     color: black;
 }
+.newBet {
+    width: 300px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+input {
+    margin: 5px 0 5px 10px;
+}
+.result {
+    width: 30px;
+}
+.bet {
+    width: 40px;
+}
+.betHead {
+    width: 220px;
+    display: flex;
+    justify-content: space-between;
+}
 .event {
     width: 400px;
     margin: 0 auto;
