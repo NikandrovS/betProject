@@ -21,8 +21,13 @@ router
         await ctx.render('eventPage', {renderPage, betList})
     })
     .post('/event/:id', async(ctx) => {
-        ctx.request.body.id = ctx.params.id;
-        await database.addNewBet(ctx.request.body);
+        let parse = ctx.request.body;
+        if (parse.winner) {
+            await database.setWinner( parse.winner, ctx.params.id )
+        } else {
+            ctx.request.body.id = ctx.params.id;
+            await database.addNewBet(ctx.request.body);
+        }
         ctx.redirect('/event/' + ctx.params.id);
     })
     .get('/2', async(ctx) => {
