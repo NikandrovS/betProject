@@ -17,12 +17,24 @@ const crud = {
             GROUP BY id
             ORDER BY status;`, [Number(id)]);
     },
-    getBets: async (id) => {
+    getTopBets: async (id) => {
         return query(`SELECT sum(bet1)+sum(bet2) as bet, player FROM deposits
             WHERE event_id = ?
             GROUP BY player
             ORDER BY bet desc
             LIMIT 5 OFFSET 0;`, [Number(id)]);
+    },
+    getBets1: async (id) => {
+        return query(`SELECT sum(bet1) as bet, player FROM deposits
+            WHERE event_id = ? and bet1 > 0
+            GROUP BY player
+            ORDER BY bet desc;`, [id]);
+    },
+    getBets2: async (id) => {
+        return query(`SELECT sum(bet2) as bet, player FROM deposits
+            WHERE event_id = ? and bet2 > 0
+            GROUP BY player
+            ORDER BY bet desc;`, [id]);
     },
     createEvent: async ( {title, until, result1, result2} ) => {
         return query(`INSERT INTO ${tableName} (event, until, result1, result2) 
@@ -35,5 +47,7 @@ const crud = {
         return query(`INSERT INTO deposits (event_id, bet?, player) 
             VALUES (?, ?, ?);`, [Number(result), Number(id), Number(sum), player]);
     },
+    setWinner: async ( winner, id ) => {
+        return query(`UPDATE events SET status = ? WHERE (id = ?);`, [winner, Number(id)])}
 };
 module.exports = crud;

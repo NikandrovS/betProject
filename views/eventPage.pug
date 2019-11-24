@@ -7,44 +7,84 @@ html
     body
         a(href='/main')
             h1.logo Sanriko`s bets
-        form(method="post" class="newBet")
-            div.betHead
-                label
-                    span Исход
-                    input(type="list" class="result" name="result" list="result" maxlength="1" required)
-                    datalist#result
-                        option 1
-                        option 2
-                label
-                    span Ставка
-                    input(type="text" class="bet" name="sum" maxlength="30" required)
-            label
-                span Игрок
-                input(type="text" name="player" maxlength="30" required)
-            input(type="submit" value="Добавить")
         each item in renderPage
-            div(class="event")
+            if ( item.status === 'active' )
+                form(method="post" class="newBet")
+                    div.betHead
+                        label
+                            span Исход
+                            input(type="list" class="result" name="result" list="result" maxlength="1" required)
+                            datalist#result
+                                option 1
+                                option 2
+                        label
+                            span Ставка
+                            input(type="text" class="bet" name="sum" maxlength="30" required)
+                    label
+                        span Игрок
+                        input(type="text" name="player" maxlength="30" required)
+                    input(type="submit" value="Добавить")
+            div(class="event" + ' ' + item.status id='event')
                 div.title
                     span.id= '#' + item.id
                     h3= item.event
                 div.condition
                     - var sum = item.total1 + item.total2
                     div.result1
-                        h4= item.result1
-                        p Исход 1
-                        p= '×' + ((sum / item.total1) / 100 * 97.5).toFixed(2)
-                    div.ratio
+                        .description
+                            span.name= item.result1
+                            span.side Исход 1
+                            span.ratio= '×' + ((sum / item.total1) / 100 * 97.5).toFixed(2)
                         - var win1 = ( Math.round(item.total1 / sum * 100) )
-                        - var win2 = ( Math.round(item.total2 / sum * 100) )
-                        p= win1 + '%' + ' × ' + win2 + '%'
-                        p= 'Всего монет поставленно ' + (item.total1 + item.total2)
-                        p.deadLine= 'Прием ставок до: ' + item.until
+                        if item.status === 'won1'
+                            .chance.winner
+                                span= win1 + '%'
+                        else
+                            .chance
+                                span= win1 + '%'
+                    div.vs
+                        p.deadLine ×
                     div.result2
-                        h4= item.result2
-                        p Исход 2
-                        p= '×' + ((sum / item.total2) / 100 * 97.5).toFixed(2)
-        div.topBets
-            h3 TOP 5 BETS
-            each item in betList
+                        - var win2 = ( Math.round(item.total2 / sum * 100) )
+                        if item.status === 'won2'
+                            .chance.winner
+                                span= win2 + '%'
+                        else
+                            .chance
+                                span= win2 + '%'
+                        .description
+                            span.name= item.result2
+                            span.side Исход 2
+                            span.ratio= '×' + ((sum / item.total2) / 100 * 97.5).toFixed(2)
+                div.info
+                    p= 'Всего монет поставленно ' + (item.total1 + item.total2)
+                    p= 'Прием ставок до: ' + item.until
+            if( item.status === 'active' )
+                input(type="button" id="btn" value="Завершить")
+                form(method="post" id="form" class="hidden")
+                    label Исход 1
+                        input(type="radio" name="winner" value="won1" required)
+                    label Исход 2
+                        input(type="radio" name="winner" value="won2")
+                    input(type="submit" value="Подтвердить")
+        .statistic
+            div.topBets
+                h3 TOP 5 BETS
                 ul
-                    li= item.player + ' ' + item.bet + ' монет'
+                    each item in betList
+                        li= item.player + ' ' + item.bet + ' монет'
+            if (renderPage[0].status !== "active")
+                div.winners
+                    -let totalSum = (renderPage[0].total1 + renderPage[0].total2)
+                    -let coeff1 = (( totalSum/renderPage[0].total1 ) * 0.975 ).toFixed(2)
+                    -let coeff2 = (( totalSum/renderPage[0].total2 ) * 0.975 ).toFixed(2)
+                    h3 Победители
+                    ul
+                        case renderPage[0].status
+                            when "won1": each object in betsResult1
+                                li= object.player + ' ' + object.bet * coeff1
+                            when "won2": each object in betsResult2
+                                li= object.player + ' ' + object.bet * coeff2
+                            default: div.hidden
+script
+    include main.js

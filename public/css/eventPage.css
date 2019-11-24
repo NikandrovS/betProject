@@ -1,52 +1,114 @@
 body {
     display: flex;
-    justify-content: center;
     flex-direction: column;
-
+    align-items: center;
 }
 .logo {
-    width: 200px;
-    margin: 0 auto;
+    width: 900px;
+    text-align: center;
+    font-size: 50px;
 }
 a {
     color: black;
     text-decoration: none;
 }
-a:active {
-    color: black;
+input {
+    height: 40px;
+    margin: 15px;
+    font-size: 25px;
 }
-.newBet {
-    width: 300px;
+.inputs {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin: 10px;
+    width: 900px;
+}
+.event {
+    width: 940px;
     margin: 0 auto;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}
+.title {
     display: flex;
     flex-direction: column;
     align-items: center;
-}
-input {
-    margin: 5px 0 5px 10px;
-}
-.result {
-    width: 30px;
-}
-.bet {
-    width: 40px;
-}
-.betHead {
-    width: 220px;
-    display: flex;
-    justify-content: space-between;
-}
-.event {
-    width: 400px;
-    margin: 0 auto;
-}
-.topBets {
-    width: 400px;
-    margin: 0 auto;
     text-align: center;
 }
+.id {
+    align-self: flex-end;
+}
 h3 {
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+.title h3 {
+    margin-top: 0;
+}
+.condition {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 25px;
+}
+.result1, .result2 {
+    display: flex;
+    align-items: center;
+    width: 300px;
+}
+.result1 {
+    display: flex;
+    justify-content: flex-end;
+    text-align: right;
+}
+.description {
+    display: flex;
+    flex-direction: column;
+}
+.side {
+    margin: 5px 0;
+}
+.chance {
+    padding: 0 30px;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+.info {
+    margin: 0 auto;
+    text-align: center;
+    font-size: 20px;
+}
+.winner {
+    background: url("../img/win.png") 50% 50% no-repeat;
+    background-size: contain;
+}
+.setWinner {
+    width: 900px;
+    margin: 0 auto;
+    font-size: 23px;
+    display: flex;
+    justify-content: space-around;
+}
+.setWinner input {
     margin: 0;
+}
+.setWinner label {
+    display: flex;
+    align-items: center;
+}
+.hidden {
+    display: none;
+}
+.topBets, .winners {
+    width: 250px;
+    text-align: center;
+    font-size: 23px;
 }
 ul {
     padding: 0;
@@ -54,27 +116,42 @@ ul {
 li {
     list-style-type: none;
 }
-.title {
+.statistic {
     display: flex;
-    align-items: center;
-    flex-direction: column;
 }
-.ratio {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+
+
+@media (min-width: 1000px) {
+    .logo {
+        font-size: 32px;
+        margin: 0;
+    }
+    h3 {
+        font-size: 19px;
+    }
+    .event {
+        width: 380px;
+        padding: 10px;
+    }
+    input {
+        height: 15px;
+        font-size: 14px;
+        margin: 10px;
+    }
+    input[type=submit], input[type=button] {
+        height: 25px;
+    }
+    .condition, .info, .topBets, .setWinner, .winners {
+        font-size: 16px;
+    }
+    .chance {
+        padding: 0 15px;
+    }
+    .name {
+        margin-bottom: 10px;
+    }
+    .result1, .result2 {
+        width: 150px;
+    }
 }
-.deadLine {
-    margin: 0px;
-}
-.condition {
-    text-align: center;
-    display: flex;
-    justify-content: space-evenly;
-}
-.id {
-    align-self: flex-end;
-}
-.topBets {
-    margin-top: 20px;
-}
+
