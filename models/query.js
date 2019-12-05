@@ -48,6 +48,7 @@ const crud = {
             VALUES (?, ?, ?);`, [Number(result), Number(id), Number(sum), player]);
     },
     setWinner: async ( winner, id ) => {
-        return query(`UPDATE events SET status = ? WHERE (id = ?);`, [winner, Number(id)])}
+        return query(`UPDATE events SET status = ? WHERE (id = ?);`, [winner, Number(id)]);
+    },
 };
 module.exports = crud;
