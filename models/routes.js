@@ -41,12 +41,17 @@ router
     .post('/event/:id', async(ctx) => {
         if (ctx.isAuthenticated()) {
             let parse = ctx.request.body;
-            if (parse.winner) {
-                await database.setWinner( parse.winner, ctx.params.id )
-            } else {
-                ctx.request.body.id = ctx.params.id;
-                await database.addNewBet(ctx.request.body);
-            }
+            await database.setWinner( parse.winner, ctx.params.id );
+            ctx.redirect('/event/' + ctx.params.id);
+        } else {
+            ctx.body = { success: false };
+            ctx.throw(401);
+        }
+    })
+    .post('/placeBet/:id', async(ctx) => {
+        if (ctx.isAuthenticated()) {
+            ctx.request.body.id = ctx.params.id;
+            await database.addNewBet(ctx.request.body);
             ctx.redirect('/event/' + ctx.params.id);
         } else {
             ctx.body = { success: false };
@@ -59,13 +64,13 @@ router
     .post('/login',
         passport.authenticate('local', {
             successRedirect: '/main',
-            failureRedirect: '/'
+            failureRedirect: '/login'
         })
     )
     .get('/logout', async (ctx) => {
         if (ctx.isAuthenticated()) {
             ctx.logout();
-            ctx.redirect('/');
+            ctx.redirect('/login');
         } else {
             ctx.body = { success: false };
             ctx.throw(401);

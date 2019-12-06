@@ -9,7 +9,7 @@ html
             h1.logo Sanriko`s bets
         each item in renderPage
             if ( item.status === 'active' )
-                form(method="post" class="newBet")
+                form(action="/placeBet/"+item.id method="post" class="newBet")
                     div.betHead
                         label
                             span Исход
