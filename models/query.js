@@ -47,12 +47,16 @@ const crud = {
         return query(`INSERT INTO deposits (event_id, bet?, player) 
             VALUES (?, ?, ?);`, [Number(result), Number(id), Number(sum), player]);
     },
+    writeOff: async ( {result, sum, player, id} ) => {
+        return query(`UPDATE users SET balance = balance - ?
+	        where username = ?;`, [Number(sum), player]);
+    },
     setWinner: async ( winner, id ) => {
         return query(`UPDATE events SET status = ? WHERE (id = ?);`, [winner, Number(id)]);
     },
     findOne: async (username) => {
-        return query(`SELECT id, username, password FROM bets.users
-        where username = ?;`, [username]);
+        return query(`SELECT id, username, password, balance FROM bets.users
+            where username = ?;`, [username]);
     },
 };
 module.exports = crud;

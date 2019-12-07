@@ -3,8 +3,13 @@ body {
     flex-direction: column;
     align-items: center;
 }
-.logo {
+header {
     width: 900px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.logo {
     text-align: center;
     font-size: 50px;
 }
@@ -106,6 +111,9 @@ h3 {
 }
 
 @media (min-width: 1000px) {
+    header {
+        width: 500px;
+    }
     .logo {
         font-size: 32px;
         margin: 0;
