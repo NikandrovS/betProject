@@ -36,6 +36,11 @@ const crud = {
             GROUP BY player
             ORDER BY bet desc;`, [id]);
     },
+    getTotalBets: async (id) => {
+        return query(`SELECT SUM(bet1) as total1, SUM(bet2) as total2
+            FROM events, deposits WHERE events.id=deposits.event_id AND id = ?
+            GROUP BY id;`, [id]);
+    },
     createEvent: async ( {title, until, result1, result2} ) => {
         return query(`INSERT INTO ${tableName} (event, until, result1, result2) 
             VALUES (?, ?, ?, ?);`,  [title, until, result1, result2]);
@@ -43,9 +48,13 @@ const crud = {
     getLastId: async () => {
         return query(`SELECT max(id) AS id FROM ${tableName}`);
     },
-    addNewBet: async ( {result, sum, player, id} ) => {
-        return query(`INSERT INTO deposits (event_id, bet?, player) 
+    placeBet: async ( {result, sum, player, id} ) => {
+        return query(`INSERT INTO deposits (event_id, bet?, player)
             VALUES (?, ?, ?);`, [Number(result), Number(id), Number(sum), player]);
+    },
+    addBalance: async ( sum, player ) => {
+        return query(`UPDATE users SET balance = balance + ?
+	        where username = ?;`, [Number(sum), player]);
     },
     writeOff: async ( {result, sum, player, id} ) => {
         return query(`UPDATE users SET balance = balance - ?

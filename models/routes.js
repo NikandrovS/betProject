@@ -1,6 +1,7 @@
 const Router = require('koa-router');
 const passport = require('koa-passport');
 const database = require('./query');
+const payoff = require('./payoff');
 const router = new Router();
 
 router
@@ -20,6 +21,15 @@ router
         if (ctx.isAuthenticated()) {
             await database.createEvent(ctx.request.body);
             let lastId = await database.getLastId();
+            console.log(lastId);
+            for (let i = 1; i < 3; i++) {
+                await database.placeBet({
+                    result: i,
+                    sum: 500,
+                    player: "Sanriko",
+                    id: lastId[0].id
+                });
+            }
             ctx.redirect('/event/' + lastId[0].id);
         } else {
             ctx.body = { success: false };
@@ -41,30 +51,21 @@ router
     })
     .post('/event/:id', async(ctx) => {
         if (ctx.isAuthenticated()) {
-            let parse = ctx.request.body;
-            await database.setWinner( parse.winner, ctx.params.id );
+            let getResult = ctx.request.body;
+            payoff(getResult.winner, ctx);
+            await database.setWinner( getResult.winner, ctx.params.id );
             ctx.redirect('/event/' + ctx.params.id);
         } else {
             ctx.body = { success: false };
             ctx.throw(401);
         }
     })
-    // .post('/placeBet/:id', async(ctx) => {
-    //     if (ctx.isAuthenticated()) {
-    //         ctx.request.body.id = ctx.params.id;
-    //         await database.addNewBet(ctx.request.body);
-    //         ctx.redirect('/event/' + ctx.params.id);
-    //     } else {
-    //         ctx.body = { success: false };
-    //         ctx.throw(401);
-    //     }
-    // })
     .post('/placeBet/:id', async(ctx) => {
         if (ctx.isAuthenticated()) {
             ctx.request.body.player = ctx.state.user.username;
             ctx.request.body.id = ctx.params.id;
             try {
-                await database.addNewBet(ctx.request.body);
+                await database.placeBet(ctx.request.body);
                 await database.writeOff(ctx.request.body);
                 ctx.redirect('/event/' + ctx.params.id);
             } catch (err) {

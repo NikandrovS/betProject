@@ -23,7 +23,8 @@ html
                         .description
                             span.name= item.result1
                             span.side Исход 1
-                            span.ratio= '×' + ((sum / item.total1) / 100 * 97.5).toFixed(2)
+                            - var ratio1 = ((sum / item.total1) / 100 * 97.5).toFixed(2)
+                            span.ratio#ratio1= ratio1
                         - var win1 = ( Math.round(item.total1 / sum * 100) )
                         if item.status === 'won1'
                             .chance.winner
@@ -44,7 +45,8 @@ html
                         .description
                             span.name= item.result2
                             span.side Исход 2
-                            span.ratio= '×' + ((sum / item.total2) / 100 * 97.5).toFixed(2)
+                            - var ratio2 = ((sum / item.total2) / 100 * 97.5).toFixed(2)
+                            span.ratio#ratio2= ratio2
                 div.info
                     p= 'Всего монет поставленно ' + (item.total1 + item.total2)
                     p= 'Прием ставок до: ' + item.until
@@ -60,7 +62,7 @@ html
                         span Ставка
                         input(type="text" class="bet" name="sum" maxlength="30" required)
                     input(type="submit" value="Добавить")
-            if( item.status === 'active' )
+            if( item.status === 'active' && ratio1 > 1.01 && ratio2 > 1.01)
                 input(type="button" id="btn" value="Завершить")
                 form(method="post" id="form" class="hidden")
                     label Исход 1
