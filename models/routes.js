@@ -1,39 +1,90 @@
 const Router = require('koa-router');
+const passport = require('koa-passport');
 const database = require('./query');
 const router = new Router();
 
 router
     .get('/', async(ctx) => {
-        ctx.redirect('/main');
+        await ctx.render('successPage');
     })
     .get('/main', async(ctx) => {
-        let renderPage = await database.getAll();
-        await ctx.render('mainPage', {renderPage})
+        if (ctx.isAuthenticated()) {
+            let renderPage = await database.getAll();
+            await ctx.render('mainPage', {renderPage})
+        } else {
+            ctx.body = { success: false };
+            ctx.throw(401);
+        }
     })
     .post('/main', async(ctx) => {
-        await database.createEvent(ctx.request.body);
-        let lastId = await database.getLastId();
-        ctx.redirect('/event/' + lastId[0].id);
+        if (ctx.isAuthenticated()) {
+            await database.createEvent(ctx.request.body);
+            let lastId = await database.getLastId();
+            ctx.redirect('/event/' + lastId[0].id);
+        } else {
+            ctx.body = { success: false };
+            ctx.throw(401);
+        }
     })
     .get('/event/:id', async(ctx) => {
-        let betList = await database.getTopBets(ctx.params.id);
-        let renderPage = await database.getById(ctx.params.id);
-        let betsResult1 = await database.getBets1(ctx.params.id);
-        let betsResult2 = await database.getBets2(ctx.params.id);
-        await ctx.render('eventPage', {renderPage, betList, betsResult1, betsResult2})
+        if (ctx.isAuthenticated()) {
+            let betList = await database.getTopBets(ctx.params.id);
+            let renderPage = await database.getById(ctx.params.id);
+            let betsResult1 = await database.getBets1(ctx.params.id);
+            let betsResult2 = await database.getBets2(ctx.params.id);
+            await ctx.render('eventPage', {renderPage, betList, betsResult1, betsResult2})
+        } else {
+            ctx.body = { success: false };
+            ctx.throw(401);
+        }
     })
     .post('/event/:id', async(ctx) => {
-        let parse = ctx.request.body;
-        if (parse.winner) {
-            await database.setWinner( parse.winner, ctx.params.id )
+        if (ctx.isAuthenticated()) {
+            let parse = ctx.request.body;
+            await database.setWinner( parse.winner, ctx.params.id );
+            ctx.redirect('/event/' + ctx.params.id);
         } else {
+            ctx.body = { success: false };
+            ctx.throw(401);
+        }
+    })
+    .post('/placeBet/:id', async(ctx) => {
+        if (ctx.isAuthenticated()) {
             ctx.request.body.id = ctx.params.id;
             await database.addNewBet(ctx.request.body);
+            ctx.redirect('/event/' + ctx.params.id);
+        } else {
+            ctx.body = { success: false };
+            ctx.throw(401);
         }
-        ctx.redirect('/event/' + ctx.params.id);
+    })
+    .get('/login', async(ctx) => {
+        await ctx.render('loginPage');
+    })
+    .post('/login',
+        passport.authenticate('local', {
+            successRedirect: '/main',
+            failureRedirect: '/login'
+        })
+    )
+    .get('/logout', async (ctx) => {
+        if (ctx.isAuthenticated()) {
+            ctx.logout();
+            ctx.redirect('/login');
+        } else {
+            ctx.body = { success: false };
+            ctx.throw(401);
+        }
     })
     .get('/2', async(ctx) => {
-        ctx.body = await database.getAll();
+        if (ctx.isAuthenticated()) {
+            let auth = ctx.isAuthenticated();
+            await ctx.render('successPage', auth);
+        } else {
+            ctx.body = { success: false };
+            ctx.throw(401);
+        }
+
     });
 
 
