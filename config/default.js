@@ -7,7 +7,8 @@ module.exports = {
         port: 3000
     },
     product: {
-        tableName: 'events'
+        mainTable: 'events',
+        secondary: 'deposits',
     },
     database: {
         master: {

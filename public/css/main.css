@@ -1,53 +1,160 @@
 body {
     display: flex;
-    justify-content: center;
     flex-direction: column;
-
+    align-items: center;
 }
 .logo {
-    width: 200px;
-    margin: 0 auto;
+    width: 900px;
+    text-align: center;
+    font-size: 50px;
 }
 a {
     color: black;
     text-decoration: none;
 }
-a:active {
-    color: black;
+.addForm {
+    font-size: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.inputTitle {
+    width: 620px;
+}
+input {
+    height: 40px;
+    margin: 15px;
+    font-size: 25px;
+}
+.inputs {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin: 10px;
+    width: 900px;
+}
+.until {
+    width: 100px;
+}
+.addResults {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.addForm, .event {
+    width: 940px;
+    margin: 0 auto;
+    padding: 10px;
 }
 .event {
-    width: 400px;
-    margin: 0 auto;
-}
-.event:hover {
-    box-shadow: 0 0 10px rgba(0,0,0,0.5)
-}
-.past {
-    opacity: 0.25;
-}
-h3 {
-    margin: 0px;
+    display: flex;
+    flex-direction: column;
 }
 .title {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    flex-direction: column;
-}
-.ratio {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-.deadLine {
-    margin: 0px;
-}
-.condition {
     text-align: center;
-    display: flex;
-    justify-content: space-evenly;
 }
 .id {
     align-self: flex-end;
 }
 h3 {
+    font-size: 32px;
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+.condition {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 25px;
+}
+.result1, .result2 {
+    display: flex;
+    align-items: center;
+    width: 250px;
+}
+.result1 {
+    display: flex;
+    justify-content: flex-end;
+    text-align: right;
+}
+.description {
+    display: flex;
+    flex-direction: column;
+}
+
+.chance {
+    padding: 0 30px;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+.name {
+    margin-bottom: 10px;
+}
+.won1, .won2 {
+    opacity: 0.25;
+}
+.winner {
+    background: url("../img/win.png") 50% 50% no-repeat;
+    background-size: contain;
+}
+
+@media (min-width: 1000px) {
+    .logo {
+        font-size: 32px;
+        margin: 0;
+    }
+    h3 {
+        font-size: 19px;
+    }
+    .event:hover {
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5)
+    }
+    .addForm {
+        font-size: 16px;
+        padding: 0;
+    }
+    .addForm, .event {
+        width: 380px;
+        padding: 10px;
+    }
+    .event {
+        padding-bottom: 20px;
+    }
+    .inputs {
+        width: 500px;
+        margin: 0;
+    }
+    .inputTitle {
+        width: 177px;
+    }
+    input {
+        height: 15px;
+        font-size: 14px;
+        margin: 10px;
+    }
+    input[type=submit] {
+        height: 25px;
+    }
+    .until {
+        width: 45px;
+    }
+    .condition {
+        font-size: 16px;
+    }
+    .chance {
+        padding: 0 15px;
+    }
+    .name {
+        margin-bottom: 10px;
+    }
+    .result1, .result2 {
+        width: 150px;
+    }
 }

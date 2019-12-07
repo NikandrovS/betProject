@@ -3,31 +3,54 @@ html
     head
         meta(charset="utf8")
         title Главная страница
-        link(rel='stylesheet', href='./css/main.css')
+        link(rel='stylesheet', href='../css/main.css')
     body
         h1.logo Sanriko`s bets
+        form(method="post" class="addForm")
+            label
+                span Заголовок события
+                input(type="text" name="title" class="inputTitle" maxlength="50" required)
+            div.inputs
+                label
+                    span До
+                    input(type="text" name="until"  class="until" maxlength="5" required)
+                div.addResults
+                    label
+                        span Исход 1
+                        input(type="text" name="result1" maxlength="30" required)
+                    label
+                        span Исход 2
+                        input(type="text" name="result2" maxlength="30" required)
+            input(type="submit" value="Добавить")
         div.pool
             each item in renderPage
-                div(class="event" + ' ' + item.status)
-                    a(class='event' href='/' + item.id)
-                        div.title
-                            span.id= '#' + item.id
-                            h3= item.event
-                        div.condition
-                            - var sum = item.total1 + item.total2
-                            div.result1
-                                h4= item.result1
-                                p Исход 1
-                                p= '×' + ( (sum / item.total1) / 100 * 97.5).toFixed(2)
-                            div.ratio
-                                - var win1 = ( Math.round(item.total1 / sum * 100) )
-                                - var win2 = ( Math.round(item.total2 / sum * 100) )
-                                p= win1 + '%' + ' × ' + win2 + '%'
-                                p.deadLine= 'Прием ставок до: ' + item.until
-                            div.result2
-                                h4= item.result2
-                                p Исход 2
-                                p= '×' + ((sum / item.total2) / 100 * 97.5).toFixed(2)
-
-    script
-        include main.js
+                a(href='/event/' + item.id class="event" + ' ' + item.status)
+                    div.title
+                        span.id= '#' + item.id
+                        h3= item.event
+                    div.condition
+                        - var sum = item.total1 + item.total2
+                        div.result1
+                            .description
+                                span.name= item.result1
+                                span.ratio= '×' + ( (sum / item.total1) / 100 * 97.5).toFixed(2)
+                            - var win1 = ( Math.round(item.total1 / sum * 100) )
+                            if item.status === 'won1'
+                                .chance.winner
+                                    span= win1 + '%'
+                            else
+                                .chance
+                                    span= win1 + '%'
+                        div.vs
+                            p.deadLine ×
+                        div.result2
+                            - var win2 = ( Math.round(item.total2 / sum * 100) )
+                            if item.status === 'won2'
+                                .chance.winner
+                                    span= win2 + '%'
+                            else
+                                .chance
+                                    span= win2 + '%'
+                            .description
+                                span.name= item.result2
+                                span.ratio= '×' + ((sum / item.total2) / 100 * 97.5).toFixed(2)
