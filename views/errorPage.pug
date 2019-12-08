@@ -1,0 +1,17 @@
+doctype html
+html
+    head
+        meta(charset="utf8")
+        title TEST
+        link(rel='stylesheet', href='../css/eventPage.css')
+    body
+        header
+            a(href='/main')
+                h1.logo Sanriko`s bets
+            .userInfo
+                p= user.username + " "
+                span#balance= user.balance
+                a(href='/logout')
+                    p logout
+        .errorText= errorText
+

@@ -1,6 +1,7 @@
 const Router = require('koa-router');
 const passport = require('koa-passport');
 const database = require('./query');
+const payoff = require('./payoff');
 const router = new Router();
 
 router
@@ -20,6 +21,14 @@ router
         if (ctx.isAuthenticated()) {
             await database.createEvent(ctx.request.body);
             let lastId = await database.getLastId();
+            for (let i = 1; i < 3; i++) {
+                await database.placeBet({
+                    result: i,
+                    sum: 500,
+                    player: "Sanriko",
+                    id: lastId[0].id
+                });
+            }
             ctx.redirect('/event/' + lastId[0].id);
         } else {
             ctx.body = { success: false };
@@ -28,11 +37,12 @@ router
     })
     .get('/event/:id', async(ctx) => {
         if (ctx.isAuthenticated()) {
+            let user = ctx.state.user;
             let betList = await database.getTopBets(ctx.params.id);
             let renderPage = await database.getById(ctx.params.id);
             let betsResult1 = await database.getBets1(ctx.params.id);
             let betsResult2 = await database.getBets2(ctx.params.id);
-            await ctx.render('eventPage', {renderPage, betList, betsResult1, betsResult2})
+            await ctx.render('eventPage', {renderPage, betList, betsResult1, betsResult2, user})
         } else {
             ctx.body = { success: false };
             ctx.throw(401);
@@ -40,8 +50,9 @@ router
     })
     .post('/event/:id', async(ctx) => {
         if (ctx.isAuthenticated()) {
-            let parse = ctx.request.body;
-            await database.setWinner( parse.winner, ctx.params.id );
+            let getResult = ctx.request.body;
+            payoff(getResult.winner, ctx);
+            await database.setWinner( getResult.winner, ctx.params.id );
             ctx.redirect('/event/' + ctx.params.id);
         } else {
             ctx.body = { success: false };
@@ -50,8 +61,17 @@ router
     })
     .post('/placeBet/:id', async(ctx) => {
         if (ctx.isAuthenticated()) {
+            ctx.request.body.player = ctx.state.user.username;
             ctx.request.body.id = ctx.params.id;
-            await database.addNewBet(ctx.request.body);
+            try {
+                await database.writeOff(ctx.request.body);
+            } catch (err) {
+                let user = ctx.state.user;
+                let errorText = "Недостаточно средств";
+                await ctx.render('errorPage', {user, errorText});
+                return false
+            }
+            await database.placeBet(ctx.request.body);
             ctx.redirect('/event/' + ctx.params.id);
         } else {
             ctx.body = { success: false };

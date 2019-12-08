@@ -5,7 +5,12 @@ html
         title Главная страница
         link(rel='stylesheet', href='../css/main.css')
     body
-        h1.logo Sanriko`s bets
+        header
+            h1.logo Sanriko`s bets
+            .userInfo
+                p= user.username + " " + user.balance
+                a(href='/logout')
+                    p logout
         form(method="post" class="addForm")
             label
                 span Заголовок события
