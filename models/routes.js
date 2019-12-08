@@ -21,7 +21,6 @@ router
         if (ctx.isAuthenticated()) {
             await database.createEvent(ctx.request.body);
             let lastId = await database.getLastId();
-            console.log(lastId);
             for (let i = 1; i < 3; i++) {
                 await database.placeBet({
                     result: i,
@@ -65,12 +64,15 @@ router
             ctx.request.body.player = ctx.state.user.username;
             ctx.request.body.id = ctx.params.id;
             try {
-                await database.placeBet(ctx.request.body);
                 await database.writeOff(ctx.request.body);
-                ctx.redirect('/event/' + ctx.params.id);
             } catch (err) {
-                ctx.body = 'Недостаточно средств'
+                let user = ctx.state.user;
+                let errorText = "Недостаточно средств";
+                await ctx.render('errorPage', {user, errorText});
+                return false
             }
+            await database.placeBet(ctx.request.body);
+            ctx.redirect('/event/' + ctx.params.id);
         } else {
             ctx.body = { success: false };
             ctx.throw(401);
