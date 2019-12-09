@@ -87,6 +87,16 @@ router
             failureRedirect: '/login'
         })
     )
+    .post('/registration', async(ctx) => {
+        let auth = ctx.isAuthenticated();
+        try {
+            await database.newUser(ctx.request.body);
+        } catch (err) {
+            let errorText = "Имя пользователя или никнейм уже занят";
+            await ctx.render('errorPage', {errorText, auth});
+            return false
+        }
+    })
     .get('/logout', async (ctx) => {
         if (ctx.isAuthenticated()) {
             ctx.logout();

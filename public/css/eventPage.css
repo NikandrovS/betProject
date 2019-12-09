@@ -21,6 +21,7 @@ input {
     height: 40px;
     margin: 15px;
     font-size: 25px;
+    padding: 0 10px;
 }
 .inputs {
     display: flex;

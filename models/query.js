@@ -63,6 +63,10 @@ const crud = {
     setWinner: async ( winner, id ) => {
         return query(`UPDATE events SET status = ? WHERE (id = ?);`, [winner, Number(id)]);
     },
+    newUser: async ( {username, nickname, password} ) => {
+        return query(`INSERT INTO bets.users (username, nickname, password) 
+            VALUES (?, ?, ?);`, [username, nickname, password]);
+    },
     findOne: async (username) => {
         return query(`SELECT id, username, password, balance FROM bets.users
             where username = ?;`, [username]);

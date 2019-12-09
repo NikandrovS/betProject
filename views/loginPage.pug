@@ -5,14 +5,15 @@ html
         title TEST
         link(rel='stylesheet', href='../css/eventPage.css')
     body
-        - var authorised = auth
         a(href='/main')
             h1.logo Sanriko`s bets
         form.authentication(action="/login" method="post")
-            label
-                span Email
-                input(type="text" name="username" maxlength="30" required)
-            label
-                span Password
-                input(type="text" name="password" maxlength="30" required)
-            input(type="submit" value="Добавить")
+            input(type="text" name="username" maxlength="30" placeholder="Имя пользователя" autocomplete="on" required)
+            input(type="password" name="password" maxlength="30" placeholder="Пароль" autocomplete="current-password" required)
+            input(type="submit" value="Войти")
+        form.registration(action="/registration" method="post")
+            input(type="text" name="username" placeholder="Имя пользователя" maxlength="30" autocomplete="on" required)
+            input(type="text" name="nickname" maxlength="30" placeholder="App nickname" autocomplete="on" required)
+            input(type="password" name="password" placeholder="Пароль" maxlength="30" autocomplete="current-password" required)
+            input(type="submit" value="Зарегистрироваться")
+

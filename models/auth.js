@@ -27,7 +27,6 @@ passport.deserializeUser(async (username, done) => {
 passport.use(new LocalStrategy((username, password, done) => {
   fetchUser(username)
       .then(user => {
-        console.log(user);
         if (username === user.username && password === user.password) {
           done(null, user);
         } else {

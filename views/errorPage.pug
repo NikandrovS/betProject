@@ -8,7 +8,8 @@ html
         header
             a(href='/main')
                 h1.logo Sanriko`s bets
-            .userInfo
+            if auth
+                .userInfo
                 p= user.username + " "
                 span#balance= user.balance
                 a(href='/logout')
