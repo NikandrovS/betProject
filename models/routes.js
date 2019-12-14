@@ -38,11 +38,17 @@ router
     .get('/event/:id', async(ctx) => {
         if (ctx.isAuthenticated()) {
             let user = ctx.state.user;
-            let betList = await database.getTopBets(ctx.params.id);
             let renderPage = await database.getById(ctx.params.id);
-            let betsResult1 = await database.getBets1(ctx.params.id);
-            let betsResult2 = await database.getBets2(ctx.params.id);
-            await ctx.render('eventPage', {renderPage, betList, betsResult1, betsResult2, user})
+            if (!renderPage[0]) {
+                let errorText = "Эта страница удалена или еще не создана";
+                await ctx.render('errorPage', {errorText});
+                return false
+            } else {
+                let betList = await database.getTopBets(ctx.params.id);
+                let betsResult1 = await database.getBets1(ctx.params.id);
+                let betsResult2 = await database.getBets2(ctx.params.id);
+                await ctx.render('eventPage', {renderPage, betList, betsResult1, betsResult2, user})
+            }
         } else {
             ctx.body = { success: false };
             ctx.throw(401);
@@ -66,9 +72,8 @@ router
             try {
                 await database.writeOff(ctx.request.body);
             } catch (err) {
-                let user = ctx.state.user;
                 let errorText = "Недостаточно средств";
-                await ctx.render('errorPage', {user, errorText});
+                await ctx.render('errorPage', {errorText});
                 return false
             }
             await database.placeBet(ctx.request.body);
@@ -88,12 +93,11 @@ router
         })
     )
     .post('/registration', async(ctx) => {
-        let auth = ctx.isAuthenticated();
         try {
             await database.newUser(ctx.request.body);
         } catch (err) {
             let errorText = "Имя пользователя или никнейм уже занят";
-            await ctx.render('errorPage', {errorText, auth});
+            await ctx.render('errorPage', {errorText});
             return false
         }
     })
