@@ -56,6 +56,16 @@ const crud = {
         return query(`UPDATE users SET balance = balance + ?
 	        where username = ?;`, [Number(sum), player]);
     },
+    coinsPaid: async ( sum ) => {
+        return query(`UPDATE stats SET statValue = statValue + ?
+	        where id_stats = 1;`, [Number(sum)]);
+    },
+    getStats: async () => {
+        return query(`SELECT coinsPaid, id as totalEvents, transaction_id as totalBets 
+            FROM stats, events, deposits
+            ORDER BY id desc, transaction_id desc
+            LIMIT 1;`);
+    },
     writeOff: async ( {result, sum, player, id} ) => {
         return query(`UPDATE users SET balance = balance - ?
 	        where username = ?;`, [Number(sum), player]);

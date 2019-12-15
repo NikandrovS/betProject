@@ -59,3 +59,7 @@ html
                             .description
                                 span.name= item.result2
                                 span.ratio= '×' + ((sum / item.total2) / 100 * 97.5).toFixed(2)
+        footer
+            p= stats[0].coinsPaid
+            p= stats[0].totalBets
+            p= stats[0].totalEvents

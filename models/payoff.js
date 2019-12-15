@@ -24,8 +24,9 @@ async function prizeCalc (winner, ctx) {
         do {
             let prize = (eventWinners[i].bet * coeff);
             database.addBalance(prize, eventWinners[i].player);
+            database.coinsPaid(prize);
             ++i;
-        } while (eventWinners[i])
+        } while (eventWinners[i]);
     }
 }
 module.exports = prizeCalc;

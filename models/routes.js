@@ -11,9 +11,10 @@ router
     .get('/main', async(ctx) => {
         if (ctx.isAuthenticated()) {
             let renderPage = await database.getAll();
-            await ctx.render('mainPage', {renderPage})
+            let stats = await database.getStats();
+            await ctx.render('mainPage', {renderPage, stats})
         } else {
-            ctx.body = { success: false };
+            await ctx.render('loginPage');
             ctx.throw(401);
         }
     })

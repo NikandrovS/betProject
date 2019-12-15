@@ -27,8 +27,6 @@ app.use(async(ctx, next) => {
         ctx.status = err.status || 500
         if (ctx.status === 404) {
             await ctx.render('404page');
-        } else {
-            ctx.body = "other error"
         }
     }
 });
