@@ -3,13 +3,14 @@ html
     head
         meta(charset="utf8")
         title TEST
-        link(rel='stylesheet', href='../css/eventPage.css')
+        link(rel='stylesheet', href='../../css/eventPage.css')
     body
         header
-            a(href='/main')
+            a(href='/bets/main')
                 h1.logo Sanriko`s bets
             .userInfo
-                p= user.username + " "
+                a(href='/bets/balance')
+                    p= user.username + " "
                     span#balance= user.balance
                 a(href='/logout')
                     p logout
@@ -52,7 +53,7 @@ html
                     p= 'Всего монет поставленно ' + (item.total1 + item.total2)
                     p= 'Прием ставок до: ' + item.until
             if (item.status === 'active')
-                form(action="/placeBet/" + item.id method="post" class="newBet" id="newBet")
+                form(action="/bets/placeBet/" + item.id method="post" class="newBet" id="newBet")
                     label Исход 1
                         input(type="radio" name="result" value="1" required)
                     label Исход 2

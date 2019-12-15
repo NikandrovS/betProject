@@ -66,16 +66,34 @@ const crud = {
             ORDER BY id desc, transaction_id desc
             LIMIT 1;`);
     },
-    writeOff: async ( {result, sum, player, id} ) => {
+    writeOff: async ( sum, user ) => {
         return query(`UPDATE users SET balance = balance - ?
-	        where username = ?;`, [Number(sum), player]);
+	        where username = ?;`, [Number(sum), user]);
+    },
+    newWithdraw: async ( sum, user ) => {
+        return query(`INSERT INTO bets.withdraw (user, sum) 
+            VALUES (?, ?);`, [user, Number(sum)]);
+    },
+    getWithdraws: async () => {
+        return query(`SELECT * FROM bets.withdraw
+            WHERE status = "pending";`);
+    },
+    setWithdraw: async (id) => {
+        return query(`UPDATE bets.withdraw SET status = 'done' 
+            WHERE (id_withdraw = ?);`, [id]);
+    },
+    lastWithdraws: async (user) => {
+        return query(`SELECT * FROM bets.withdraw 
+            WHERE user = ?
+            ORDER BY id_withdraw desc
+            LIMIT 20;`, [user]);
     },
     setWinner: async ( winner, id ) => {
         return query(`UPDATE events SET status = ? WHERE (id = ?);`, [winner, Number(id)]);
     },
-    newUser: async ( {username, nickname, password} ) => {
-        return query(`INSERT INTO bets.users (username, nickname, password) 
-            VALUES (?, ?, ?);`, [username, nickname, password]);
+    newUser: async ( {username, password} ) => {
+        return query(`INSERT INTO bets.users (username, password) 
+            VALUES (?, ?);`, [username, password]);
     },
     findOne: async (username) => {
         return query(`SELECT id, username, password, balance FROM bets.users

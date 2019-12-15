@@ -1,0 +1,23 @@
+doctype html
+html
+    head
+        meta(charset="utf8")
+        title TEST
+        link(rel='stylesheet', href='../css/eventPage.css')
+    body
+        header
+            a(href='/bets/main')
+                h1.logo Sanriko`s bets
+            .userInfo
+                p= user.username + " "
+                span#balance= user.balance
+                a(href='/logout')
+                    p logout
+        form.writeOff(action="/writeOff" method="post")
+            p Запросить вывод
+            input(type="text" name="sum" maxlength="30" placeholder="Сумма вывода" required)
+            input(type="submit" value="Отправить")
+        div.withdraws
+            ul
+                each item in withdraws
+                    li= item.user + item.sum + item.status

@@ -1,0 +1,33 @@
+doctype html
+html
+    head
+        meta(charset="utf8")
+        title TEST
+        link(rel='stylesheet', href='../css/eventPage.css')
+    body
+        a(href='/bets/main')
+            h1.logo Sanriko`s bets
+        form.addBalance(action="/addBalance" method="post")
+            p Пополнение баланса
+            input(type="text" name="username" maxlength="30" placeholder="Имя пользователя" required)
+            input(type="text" name="sum" maxlength="30" placeholder="Сумма депозита" required)
+            input(type="submit" value="Пополнить")
+        form.writeOff(action="/writeOff" method="post")
+            p Списание баланса
+            input(type="text" name="username" maxlength="30" placeholder="Имя пользователя" required)
+            input(type="text" name="sum" maxlength="30" placeholder="Сумма вывода" required)
+            input(type="submit" value="Списать")
+        if (withdraws.length < 1)
+            p Нет транзакций для вывода
+        else
+            ul
+                p Ожидают вывода:
+                each item in withdraws
+                    li
+                        form(name="pendingWithdraw" withDrawId=item.id_withdraw)
+                            div=item.user + ' сумма: ' + item.sum + ' статус: '
+                                p.status=item.status
+                            input(type="submit" withDrawId=item.id_withdraw value="✔")
+
+script
+    include adminsPage.js

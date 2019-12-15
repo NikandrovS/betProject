@@ -8,7 +8,8 @@ html
         header
             h1.logo Sanriko`s bets
             .userInfo
-                p= user.username + " " + user.balance
+                a(href='/bets/balance')
+                    p= user.username + " " + user.balance
                 a(href='/logout')
                     p logout
         form(method="post" class="addForm")
@@ -29,7 +30,7 @@ html
             input(type="submit" value="Добавить")
         div.pool
             each item in renderPage
-                a(href='/event/' + item.id class="event" + ' ' + item.status)
+                a(href='/bets/event/' + item.id class="event" + ' ' + item.status)
                     div.title
                         span.id= '#' + item.id
                         h3= item.event

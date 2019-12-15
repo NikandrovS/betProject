@@ -8,7 +8,7 @@ router
     .get('/', async(ctx) => {
         await ctx.render('successPage');
     })
-    .get('/main', async(ctx) => {
+    .get('/bets/main', async(ctx) => {
         if (ctx.isAuthenticated()) {
             let renderPage = await database.getAll();
             let stats = await database.getStats();
@@ -18,7 +18,7 @@ router
             ctx.throw(401);
         }
     })
-    .post('/main', async(ctx) => {
+    .post('/bets/main', async(ctx) => {
         if (ctx.isAuthenticated()) {
             await database.createEvent(ctx.request.body);
             let lastId = await database.getLastId();
@@ -36,7 +36,7 @@ router
             ctx.throw(401);
         }
     })
-    .get('/event/:id', async(ctx) => {
+    .get('/bets/event/:id', async(ctx) => {
         if (ctx.isAuthenticated()) {
             let user = ctx.state.user;
             let renderPage = await database.getById(ctx.params.id);
@@ -55,7 +55,7 @@ router
             ctx.throw(401);
         }
     })
-    .post('/event/:id', async(ctx) => {
+    .post('/bets/event/:id', async(ctx) => {
         if (ctx.isAuthenticated()) {
             let getResult = ctx.request.body;
             payoff(getResult.winner, ctx);
@@ -66,12 +66,14 @@ router
             ctx.throw(401);
         }
     })
-    .post('/placeBet/:id', async(ctx) => {
+    .post('/bets/placeBet/:id', async(ctx) => {
         if (ctx.isAuthenticated()) {
-            ctx.request.body.player = ctx.state.user.username;
+            let sum = ctx.request.body.sum;
+            let user = ctx.state.user.username;
             ctx.request.body.id = ctx.params.id;
+            ctx.request.body.player = user;
             try {
-                await database.writeOff(ctx.request.body);
+                await database.writeOff(sum, user);
             } catch (err) {
                 let errorText = "Недостаточно средств";
                 await ctx.render('errorPage', {errorText});
@@ -111,12 +113,69 @@ router
             ctx.throw(401);
         }
     })
-    .get('/2', async(ctx) => {
+    .get('/bets/balance', async (ctx) => {
         if (ctx.isAuthenticated()) {
-            let auth = ctx.isAuthenticated();
-            await ctx.render('successPage', auth);
+            let withdraws = await database.lastWithdraws(ctx.state.user.username);
+            await ctx.render('balance', {withdraws});
         } else {
             ctx.body = { success: false };
+            ctx.throw(401);
+        }
+    })
+    .get('/bets/admin', async(ctx) => {
+        if (ctx.isAuthenticated() && ctx.state.user.username === "Sanriko") {
+            let withdraws = await database.getWithdraws();
+            await ctx.render('adminPage', {withdraws});
+        } else {
+            console.log(ctx.state.user);
+            ctx.body = "Доступ запрещен";
+            ctx.throw(401);
+        }
+
+    })
+    .post('/addBalance', async(ctx) => {
+        if (ctx.isAuthenticated() && ctx.state.user.username === "Sanriko") {
+            database.addBalance(ctx.request.body.sum, ctx.request.body.username);
+            ctx.redirect('/admin');
+        } else {
+            ctx.body = "Доступ запрещен";
+            ctx.throw(401);
+        }
+
+    })
+    .post('/writeOff', async(ctx) => {
+        if (ctx.isAuthenticated()) {
+            let user = ctx.state.user;
+            let sum = ctx.request.body.sum;
+            let username = user.username;
+            try {
+                await database.writeOff(sum, username);
+                await database.newWithdraw(sum, username);
+            } catch (err) {
+                let errorText = "Недостаточно средств";
+                await ctx.render('errorPage', {errorText});
+                return false
+            }
+            ctx.redirect('/bets/balance', {user});
+        } else {
+            ctx.body = "Доступ запрещен";
+            ctx.throw(401);
+        }
+
+    })
+    .post('/bets/done/:id', async(ctx) => {
+        if (ctx.isAuthenticated()) {
+            let result = await database.setWithdraw(ctx.request.body.id);
+
+            let promise = new Promise(function(res){
+                if (result.affectedRows) {
+                    res('done');
+                }
+            });
+
+            ctx.body = await promise;
+        } else {
+            ctx.body = "Доступ запрещен";
             ctx.throw(401);
         }
 
