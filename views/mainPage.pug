@@ -12,22 +12,6 @@ html
                     p= user.username + " " + user.balance
                 a(href='/logout')
                     p logout
-        form(method="post" class="addForm")
-            label
-                span Заголовок события
-                input(type="text" name="title" class="inputTitle" maxlength="50" required)
-            div.inputs
-                label
-                    span До
-                    input(type="text" name="until"  class="until" maxlength="5" required)
-                div.addResults
-                    label
-                        span Исход 1
-                        input(type="text" name="result1" maxlength="30" required)
-                    label
-                        span Исход 2
-                        input(type="text" name="result2" maxlength="30" required)
-            input(type="submit" value="Добавить")
         div.pool
             each item in renderPage
                 a(href='/bets/event/' + item.id class="event" + ' ' + item.status)

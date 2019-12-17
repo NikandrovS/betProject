@@ -18,24 +18,6 @@ router
             ctx.throw(401);
         }
     })
-    .post('/bets/main', async(ctx) => {
-        if (ctx.isAuthenticated()) {
-            await database.createEvent(ctx.request.body);
-            let lastId = await database.getLastId();
-            for (let i = 1; i < 3; i++) {
-                await database.placeBet({
-                    result: i,
-                    sum: 500,
-                    player: "Sanriko",
-                    id: lastId[0].id
-                });
-            }
-            ctx.redirect('/event/' + lastId[0].id);
-        } else {
-            ctx.body = { success: false };
-            ctx.throw(401);
-        }
-    })
     .get('/bets/event/:id', async(ctx) => {
         if (ctx.isAuthenticated()) {
             let user = ctx.state.user;
@@ -60,7 +42,7 @@ router
             let getResult = ctx.request.body;
             payoff(getResult.winner, ctx);
             await database.setWinner( getResult.winner, ctx.params.id );
-            ctx.redirect('/event/' + ctx.params.id);
+            ctx.redirect('/bets/event/' + ctx.params.id);
         } else {
             ctx.body = { success: false };
             ctx.throw(401);
@@ -80,7 +62,7 @@ router
                 return false
             }
             await database.placeBet(ctx.request.body);
-            ctx.redirect('/event/' + ctx.params.id);
+            ctx.redirect('/bets/event/' + ctx.params.id);
         } else {
             ctx.body = { success: false };
             ctx.throw(401);
@@ -91,7 +73,7 @@ router
     })
     .post('/login',
         passport.authenticate('local', {
-            successRedirect: '/main',
+            successRedirect: '/bets/main',
             failureRedirect: '/login'
         })
     )
@@ -125,9 +107,28 @@ router
     .get('/bets/admin', async(ctx) => {
         if (ctx.isAuthenticated() && ctx.state.user.username === "Sanriko") {
             let withdraws = await database.getWithdraws();
-            await ctx.render('adminPage', {withdraws});
+            let usernames = await database.getUsernames();
+            await ctx.render('adminPage', {withdraws, usernames});
         } else {
-            console.log(ctx.state.user);
+            ctx.body = "Доступ запрещен";
+            ctx.throw(401);
+        }
+
+    })
+    .post('/bets/admin', async(ctx) => {
+        if (ctx.isAuthenticated() && ctx.state.user.username === "Sanriko") {
+            await database.createEvent(ctx.request.body);
+            let lastId = await database.getLastId();
+            for (let i = 1; i < 3; i++) {
+                await database.placeBet({
+                    result: i,
+                    sum: 500,
+                    player: "Sanriko",
+                    id: lastId[0].id
+                });
+            }
+            ctx.redirect('/bets/event/' + lastId[0].id);
+        } else {
             ctx.body = "Доступ запрещен";
             ctx.throw(401);
         }
@@ -136,7 +137,7 @@ router
     .post('/addBalance', async(ctx) => {
         if (ctx.isAuthenticated() && ctx.state.user.username === "Sanriko") {
             database.addBalance(ctx.request.body.sum, ctx.request.body.username);
-            ctx.redirect('/admin');
+            ctx.redirect('/bets/admin');
         } else {
             ctx.body = "Доступ запрещен";
             ctx.throw(401);
@@ -145,7 +146,13 @@ router
     })
     .post('/writeOff', async(ctx) => {
         if (ctx.isAuthenticated()) {
-            let user = ctx.state.user;
+            let user;
+
+            if (ctx.state.user.username === "Sanriko") {
+                user = ctx.request.body
+            } else {
+                user = ctx.state.user;
+            }
             let sum = ctx.request.body.sum;
             let username = user.username;
             try {
@@ -161,7 +168,6 @@ router
             ctx.body = "Доступ запрещен";
             ctx.throw(401);
         }
-
     })
     .post('/bets/done/:id', async(ctx) => {
         if (ctx.isAuthenticated()) {

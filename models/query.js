@@ -8,7 +8,7 @@ const crud = {
         return query(`SELECT id, event, until, result1, SUM(bet1) as total1, result2, SUM(bet2) as total2,status
             FROM events, deposits WHERE events.id=deposits.event_id
             GROUP BY id
-            ORDER BY status
+            ORDER BY FIELD(status, "active") DESC, id desc
             LIMIT 20 OFFSET 0;`);
     },
     getById: async (id) => {
@@ -57,7 +57,7 @@ const crud = {
 	        where username = ?;`, [Number(sum), player]);
     },
     coinsPaid: async ( sum ) => {
-        return query(`UPDATE stats SET statValue = statValue + ?
+        return query(`UPDATE stats SET coinsPaid = coinsPaid + ?
 	        where id_stats = 1;`, [Number(sum)]);
     },
     getStats: async () => {
@@ -65,6 +65,9 @@ const crud = {
             FROM stats, events, deposits
             ORDER BY id desc, transaction_id desc
             LIMIT 1;`);
+    },
+    getUsernames: async () => {
+        return query(`SELECT player FROM bets.deposits GROUP BY player;`);
     },
     writeOff: async ( sum, user ) => {
         return query(`UPDATE users SET balance = balance - ?

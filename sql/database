@@ -1,0 +1,46 @@
+
+CREATE TABLE `deposits` (
+  `transaction_id` int(11) NOT NULL AUTO_INCREMENT,
+  `event_id` int(11) NOT NULL,
+  `bet1` int(11) DEFAULT '0',
+  `bet2` int(11) DEFAULT '0',
+  `player` varchar(30) NOT NULL,
+  PRIMARY KEY (`transaction_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=149 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+CREATE TABLE `events` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `event` varchar(50) NOT NULL,
+  `until` varchar(5) NOT NULL,
+  `result1` varchar(30) NOT NULL,
+  `result2` varchar(30) NOT NULL,
+  `status` varchar(6) DEFAULT 'active',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+CREATE TABLE `stats` (
+  `id_stats` int(11) NOT NULL AUTO_INCREMENT,
+  `coinsPaid` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id_stats`),
+  UNIQUE KEY `id_stats_UNIQUE` (`id_stats`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(45) NOT NULL,
+  `password` varchar(45) NOT NULL,
+  `balance` int(10) unsigned NOT NULL DEFAULT '0',
+  `createdDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username_UNIQUE` (`username`)
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+CREATE TABLE `withdraw` (
+  `id_withdraw` int(11) NOT NULL AUTO_INCREMENT,
+  `user` varchar(45) NOT NULL,
+  `sum` int(11) NOT NULL,
+  `status` varchar(45) NOT NULL DEFAULT 'pending',
+  PRIMARY KEY (`id_withdraw`),
+  UNIQUE KEY `id_withdraw_UNIQUE` (`id_withdraw`)
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci

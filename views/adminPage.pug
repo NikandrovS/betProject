@@ -7,14 +7,33 @@ html
     body
         a(href='/bets/main')
             h1.logo Sanriko`s bets
+        form(method="post" class="addForm")
+            label
+                span Заголовок события
+                input(type="text" name="title" class="inputTitle" maxlength="50" required)
+            div.inputs
+                label
+                    span До
+                    input(type="text" name="until"  class="until" maxlength="5" required)
+                div.addResults
+                    label
+                        span Исход 1
+                        input(type="text" name="result1" maxlength="30" required)
+                    label
+                        span Исход 2
+                        input(type="text" name="result2" maxlength="30" required)
+            input(type="submit" value="Добавить")
         form.addBalance(action="/addBalance" method="post")
             p Пополнение баланса
-            input(type="text" name="username" maxlength="30" placeholder="Имя пользователя" required)
+            input(type="list" name="username" placeholder="Имя пользователя" list="usernames")
             input(type="text" name="sum" maxlength="30" placeholder="Сумма депозита" required)
             input(type="submit" value="Пополнить")
         form.writeOff(action="/writeOff" method="post")
             p Списание баланса
-            input(type="text" name="username" maxlength="30" placeholder="Имя пользователя" required)
+            input(type="list" name="username" placeholder="Имя пользователя" list="usernames")
+            datalist#usernames
+                each item in usernames
+                    option= item.player
             input(type="text" name="sum" maxlength="30" placeholder="Сумма вывода" required)
             input(type="submit" value="Списать")
         if (withdraws.length < 1)

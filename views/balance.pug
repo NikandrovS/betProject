@@ -15,8 +15,9 @@ html
                     p logout
         form.writeOff(action="/writeOff" method="post")
             p Запросить вывод
-            input(type="text" name="sum" maxlength="30" placeholder="Сумма вывода" required)
+            input(type="text" name="sum" pattern="[0-9]{3,}"  placeholder="Сумма вывода" required)
             input(type="submit" value="Отправить")
+            p Минимальная сумма вывода: 100 монет
         div.withdraws
             ul
                 each item in withdraws
