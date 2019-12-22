@@ -1,3 +1,9 @@
+html {
+    color: #9191b4;
+    font-size: 25px;
+    font-family: 'Roboto Slab', serif;
+    background-color: #11111F;
+}
 body {
     display: flex;
     flex-direction: column;
@@ -10,8 +16,10 @@ header {
     align-items: center;
 }
 .logo {
+    color: #6565B8;
     text-align: center;
     font-size: 50px;
+    font-family: 'Girassol', cursive;
 }
 a {
     color: black;

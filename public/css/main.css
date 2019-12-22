@@ -1,7 +1,13 @@
+html {
+    color: #9191b4;
+    font-size: 25px;
+    font-family: 'Roboto Slab', serif;
+}
 body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    background-color: #11111F;
 }
 header {
     width: 900px;
@@ -12,9 +18,52 @@ header {
 .logo {
     text-align: center;
     font-size: 50px;
+    font-family: 'Girassol', cursive;
+    color: #6565B8;
+    margin: 10px;
+}
+.userInfo {
+    display: flex;
+    align-items: center;
+}
+.user {
+    display: flex;
+    padding-right: 20px;
+}
+.username {
+    padding-right: 10px;
+    margin: 0;
+}
+.login {
+    margin: 0;
+}
+.login:hover {
+    color: #6969cd;
+}
+.logout {
+    display: block;
+    width: 18px;
+    height: 33px;
+    background: url("../img/logout.svg") 50% 60% no-repeat;
+    background-size: contain;
+}
+.logout:hover {
+    background: url("../img/logout_active.svg") 50% 60% no-repeat;
+    background-size: contain;
+}
+.balance {
+    color: #6565B8;
+    font-size: 30px;
+}
+.balance:hover {
+    color: #7575c9;
+}
+.coin {
+    padding: 0 5px;
+    width: 22px;
 }
 a {
-    color: black;
+    color: #9191b4;
     text-decoration: none;
 }
 .addForm {
@@ -29,7 +78,6 @@ a {
 input {
     height: 40px;
     margin: 15px;
-    font-size: 25px;
 }
 .inputs {
     display: flex;
@@ -54,6 +102,10 @@ input {
 .event {
     display: flex;
     flex-direction: column;
+    border: solid #43437A 2px;
+    background: #1A1A2F;
+    padding-bottom: 30px;
+    margin: 10px 0;
 }
 .title {
     display: flex;
@@ -63,6 +115,7 @@ input {
 }
 .id {
     align-self: flex-end;
+    font-size: 16px;
 }
 h3 {
     font-size: 32px;
@@ -73,12 +126,11 @@ h3 {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 25px;
 }
 .result1, .result2 {
     display: flex;
     align-items: center;
-    width: 250px;
+    width: 350px;
 }
 .result1 {
     display: flex;
@@ -91,7 +143,7 @@ h3 {
 }
 
 .chance {
-    padding: 0 30px;
+    padding: 0 50px;
     width: 35px;
     height: 35px;
     display: flex;
@@ -102,21 +154,52 @@ h3 {
 .name {
     margin-bottom: 10px;
 }
+.won1 .condition{
+    /*background: linear-gradient(135deg, rgb(73, 64, 199) 53%, #11111F 28%);*/
+    background: linear-gradient(135deg, #30306B 20%, #1A1A2F 80%);
+}
+.won2 .condition{
+    background: linear-gradient(135deg, #1A1A2F 20%, #30306B 60%);
+}
 .won1, .won2 {
-    opacity: 0.25;
+    opacity: 0.3;
+}
+.pending {
+    opacity: 0.5;
 }
 .winner {
     background: url("../img/win.png") 50% 50% no-repeat;
     background-size: contain;
 }
+footer {
+    width: 900px;
+    font-size: 20px;
+    display: flex;
+    justify-content: space-evenly;
+}
 
 @media (min-width: 1000px) {
+    html {
+        font-size: 16px;
+    }
     header {
-        width: 500px;
+        font-size: 20px;
+    }
+    .user {
+        align-items: center;
+    }
+    .logout {
+        height: 25px;
+    }
+    .balance {
+        font-size: 20px;
+    }
+    .coin {
+        width: 16px;
     }
     .logo {
-        font-size: 32px;
-        margin: 0;
+        font-size: 30px;
+        margin: 5px;
     }
     h3 {
         font-size: 19px;
@@ -124,16 +207,9 @@ h3 {
     .event:hover {
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.5)
     }
-    .addForm {
-        font-size: 16px;
-        padding: 0;
-    }
-    .addForm, .event {
-        width: 380px;
-        padding: 10px;
-    }
     .event {
-        padding-bottom: 20px;
+        width: 450px;
+        padding: 10px 10px 20px 10px;
     }
     .inputs {
         width: 500px;
@@ -163,6 +239,10 @@ h3 {
         margin-bottom: 10px;
     }
     .result1, .result2 {
-        width: 150px;
+        width: 200px;
+    }
+    footer {
+        width: 480px;
+        font-size: 13px;
     }
 }

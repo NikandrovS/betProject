@@ -2,17 +2,29 @@ doctype html
 html
     head
         meta(charset="utf8")
-        title TEST
-        link(rel='stylesheet', href='../css/eventPage.css')
+        title Авторизация
+        link(rel='stylesheet', href='../css/loginPage.css')
+        link(rel="shortcut icon" type="image/x-icon" href="../img/favicon.ico")
+        link(href="https://fonts.googleapis.com/css?family=Girassol|Roboto+Slab&display=swap" rel="stylesheet")
     body
         a(href='/bets/main')
-            h1.logo Sanriko`s bets
-        form.authentication(action="/login" method="post")
-            input(type="text" name="username" maxlength="30" placeholder="Имя пользователя" autocomplete="on" required)
-            input(type="password" name="password" maxlength="30" placeholder="Пароль" autocomplete="current-password" required)
-            input(type="submit" value="Войти")
-        form.registration(action="/registration" method="post")
-            input(type="text" name="username" placeholder="MDK nickname" maxlength="30" autocomplete="on" required)
-            input(type="password" name="password" placeholder="Пароль" maxlength="30" autocomplete="current-password" required)
-            input(type="submit" value="Зарегистрироваться")
+            h1.logo Sanriko`s world
+        .container
+            .forms
+                form.authentication(action="/login" method="post")
+                    h2 Вход
+                    .inputBox
+                        input(type="text" name="username" maxlength="30" placeholder="Имя пользователя" autocomplete="on" required)
+                    .inputBox
+                        input(type="password" name="password" maxlength="30" placeholder="Пароль" autocomplete="current-password" required)
+                    .inputBox
+                        input(type="submit" value="Войти")
+                form.registration(action="/registration" method="post")
+                    h2 Регистрация
+                    .inputBox
+                        input(type="text" name="username" placeholder="MDK nickname" maxlength="30" autocomplete="on" required)
+                    .inputBox
+                        input(type="password" name="password" placeholder="Пароль" maxlength="30" autocomplete="current-password" required)
+                    .inputBox
+                        input(type="submit" value="Зарегистрироваться")
 

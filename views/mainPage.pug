@@ -4,14 +4,22 @@ html
         meta(charset="utf8")
         title Главная страница
         link(rel='stylesheet', href='../css/main.css')
+        link(rel="shortcut icon" type="image/x-icon" href="../img/favicon.ico")
+        link(href="https://fonts.googleapis.com/css?family=Girassol|Roboto+Slab&display=swap" rel="stylesheet")
     body
         header
-            h1.logo Sanriko`s bets
-            .userInfo
-                a(href='/bets/balance')
-                    p= user.username + " " + user.balance
-                a(href='/logout')
-                    p logout
+            h1.logo Sanriko`s Bets
+            if auth
+                .userInfo
+                    .user
+                        p.username= user.username
+                        a.logout(href='/logout')
+                    a.balance(href='/bets/balance')
+                        span= user.balance
+                        img(src="../img/coin.svg" class="coin")
+            else
+                a(href='/login')
+                    p.login Войти
         div.pool
             each item in renderPage
                 a(href='/bets/event/' + item.id class="event" + ' ' + item.status)
@@ -45,6 +53,6 @@ html
                                 span.name= item.result2
                                 span.ratio= '×' + ((sum / item.total2) / 100 * 97.5).toFixed(2)
         footer
-            p= stats[0].coinsPaid
-            p= stats[0].totalBets
-            p= stats[0].totalEvents
+            p= "Монет выплачено: " + stats[0].coinsPaid
+            p= "Ставок сделано: " + stats[0].totalBets
+            p= "Событий проведено: " + stats[0].totalEvents

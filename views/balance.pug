@@ -2,23 +2,44 @@ doctype html
 html
     head
         meta(charset="utf8")
-        title TEST
-        link(rel='stylesheet', href='../css/eventPage.css')
+        title Баланс
+        link(rel='stylesheet', href='../css/balancePage.css')
+        link(rel="shortcut icon" type="image/x-icon" href="../img/favicon.ico")
+        link(href="https://fonts.googleapis.com/css?family=Girassol|Roboto+Slab&display=swap" rel="stylesheet")
     body
         header
             a(href='/bets/main')
-                h1.logo Sanriko`s bets
-            .userInfo
-                p= user.username + " "
-                span#balance= user.balance
-                a(href='/logout')
-                    p logout
-        form.writeOff(action="/writeOff" method="post")
-            p Запросить вывод
-            input(type="text" name="sum" pattern="[0-9]{3,}"  placeholder="Сумма вывода" required)
-            input(type="submit" value="Отправить")
-            p Минимальная сумма вывода: 100 монет
-        div.withdraws
-            ul
+                h1.logo Sanriko`s Bets
+            if auth
+                .userInfo
+                    .user
+                        p.username= user.username
+                        a.logout(href='/logout')
+                    a.balance(href='/bets/balance')
+                        span#balance= user.balance
+                        img(src="../../img/coin.svg" class="coin")
+            else
+                a(href='/login')
+                    p.login Войти
+        .container
+            form.writeOff(action="/writeOff" method="post")
+                h2 Запросить вывод
+                .inputBox
+                    input(type="text" name="sum" pattern="[0-9]{3,}"  placeholder="Сумма вывода" required)
+                    input(type="submit" value="Отправить")
+                span (Минимальная сумма вывода: 100 монет)
+                h2 Пополнить счет
+                p Для пополнения баланаса необходимо перевести монеты пользователю Sanriko через
+                    a(href="https://mdk.is/profile/send" target="_blank")= " mdk.is"
+        div.container.withdraws
+            h2 Недавние выводы
+            table
+                tr
+                    th Имя пользователя
+                    th Сумма
+                    th Статус
                 each item in withdraws
-                    li= item.user + item.sum + item.status
+                    tr
+                        td= item.user
+                        td= item.sum
+                        td= item.status

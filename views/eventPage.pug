@@ -2,82 +2,99 @@ doctype html
 html
     head
         meta(charset="utf8")
-        title TEST
+        title= renderPage[0].event
         link(rel='stylesheet', href='../../css/eventPage.css')
+        link(rel="shortcut icon" type="image/x-icon" href="../../img/favicon.ico")
+        link(href="https://fonts.googleapis.com/css?family=Girassol|Roboto+Slab&display=swap" rel="stylesheet")
     body
         header
             a(href='/bets/main')
-                h1.logo Sanriko`s bets
-            .userInfo
-                a(href='/bets/balance')
-                    p= user.username + " "
-                    span#balance= user.balance
-                a(href='/logout')
-                    p logout
+                h1.logo Sanriko`s Bets
+            if auth
+                .userInfo
+                    .user
+                        p.username= user.username
+                        a.logout(href='/logout')
+                    a.balance(href='/bets/balance')
+                        span#balance= user.balance
+                        img(src="../../img/coin.svg" class="coin")
+            else
+                a(href='/login')
+                    p.login Войти
         each item in renderPage
-            div(class="event" + ' ' + item.status id='event')
-                div.title
-                    span.id= '#' + item.id
-                    h3= item.event
-                div.condition
-                    - var sum = item.total1 + item.total2
-                    div.result1
-                        .description
-                            span.name= item.result1
-                            span.side Исход 1
-                            - var ratio1 = ((sum / item.total1) / 100 * 97.5).toFixed(2)
-                            span.ratio#ratio1= ratio1
-                        - var win1 = ( Math.round(item.total1 / sum * 100) )
-                        if item.status === 'won1'
-                            .chance.winner
-                                span= win1 + '%'
-                        else
-                            .chance
-                                span= win1 + '%'
-                    div.vs
-                        p.deadLine ×
-                    div.result2
-                        - var win2 = ( Math.round(item.total2 / sum * 100) )
-                        if item.status === 'won2'
-                            .chance.winner
-                                span= win2 + '%'
-                        else
-                            .chance
-                                span= win2 + '%'
-                        .description
-                            span.name= item.result2
-                            span.side Исход 2
-                            - var ratio2 = ((sum / item.total2) / 100 * 97.5).toFixed(2)
-                            span.ratio#ratio2= ratio2
-                div.info
-                    p= 'Всего монет поставленно ' + (item.total1 + item.total2)
-                    p= 'Прием ставок до: ' + item.until
-            if (item.status === 'active')
-                form(action="/bets/placeBet/" + item.id method="post" class="newBet" id="newBet")
-                    label Исход 1
-                        input(type="radio" name="result" value="1" required)
-                    label Исход 2
-                        input(type="radio" name="result" value="2")
-                    label
-                        span Ставка
-                        input(type="text" pattern="[0-9]{2,}" class="bet" id="bet" name="sum" maxlength="30" required)
-                    span (Минимальная ставка 10 монет)
-                    input#addBet(type="submit" value="Добавить")
-            if( item.status === 'active' && ratio1 > 1.01 && ratio2 > 1.01 && user.username === "Sanriko")
-                input(type="button" id="btn" value="Завершить")
-                form(method="post" id="form" class="hidden")
-                    label Исход 1
-                        input(type="radio" name="winner" value="won1" required)
-                    label Исход 2
-                        input(type="radio" name="winner" value="won2")
-                    input(type="submit" value="Подтвердить")
+             div(class="event" + ' ' + item.status id='event')
+                 div.title
+                     span.id= '#' + item.id
+                     h3= item.event
+                 div.condition
+                     - var sum = item.total1 + item.total2
+                     div.result1
+                         .description
+                             span.name= item.result1
+                             span.side Исход 1
+                             - var ratio1 = ((sum / item.total1) / 100 * 97.5).toFixed(2)
+                             span.ratio#ratio1= ratio1
+                         - var win1 = ( Math.round(item.total1 / sum * 100) )
+                         if item.status === 'won1'
+                             .chance.winner
+                                 span= win1 + '%'
+                         else
+                             .chance
+                                 span= win1 + '%'
+                     div.vs
+                         p.deadLine ×
+                     div.result2
+                         - var win2 = ( Math.round(item.total2 / sum * 100) )
+                         if item.status === 'won2'
+                             .chance.winner
+                                 span= win2 + '%'
+                         else
+                             .chance
+                                 span= win2 + '%'
+                         .description
+                             span.name= item.result2
+                             span.side Исход 2
+                             - var ratio2 = ((sum / item.total2) / 100 * 97.5).toFixed(2)
+                             span.ratio#ratio2= ratio2
+                 div.info
+                     p= 'Всего монет поставленно ' + (item.total1 + item.total2)
+                     p= 'Прием ставок до: ' + item.until
+             if (item.status === 'active' && auth)
+                 form(action="/bets/placeBet/" + item.id method="post" class="newBet" id="newBet")
+                     .choice
+                         label
+                             input(type="radio" id="result1" name="result" value="1" required)
+                             span Исход 1
+                         label
+                             input(type="radio" id="result2" name="result" value="2")
+                             span Исход 2
+                     .submitBet
+                         label
+                             span Ставка:
+                             input(type="text" pattern="[0-9]{2,}" class="bet" id="bet" name="sum" maxlength="30" required)
+                         input#addBet(type="submit" value="Добавить")
+                     span#warning (Минимальная ставка 10 монет)
+             if (auth && user.username === "Sanriko")
+                 if( item.status === 'active' || item.status === 'pending')
+                     input(type="button" id="btn" value="Завершить")
+                     form(method="post" id="form" class="hidden")
+                         label
+                             input(type="radio" name="winner" value="won1" required)
+                             span Исход 1
+                         label
+                             input(type="radio" name="winner" value="won2")
+                             span Исход 2
+                         label
+                             input(type="radio" name="winner" value="pending")
+                             span Ожидание
+                         input(type="submit" value="Подтвердить")
         .statistic
             div.topBets
                 h3 TOP 5 BETS
                 ul
                     each item in betList
                         li= item.player + ' ' + item.bet + ' монет'
-            if (renderPage[0].status !== "active")
+            if (renderPage[0].status !== "active" && renderPage[0].status !== "pending")
                 div.winners
                     -let totalSum = (renderPage[0].total1 + renderPage[0].total2)
                     -let coeff1 = (( totalSum/renderPage[0].total1 ) * 0.975 ).toFixed(2)

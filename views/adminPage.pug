@@ -2,51 +2,57 @@ doctype html
 html
     head
         meta(charset="utf8")
-        title TEST
-        link(rel='stylesheet', href='../css/eventPage.css')
+        title Админка
+        link(rel='stylesheet', href='../css/adminPage.css')
+        link(rel="shortcut icon" type="image/x-icon" href="../img/favicon.ico")
+        link(href="https://fonts.googleapis.com/css?family=Girassol|Roboto+Slab&display=swap" rel="stylesheet")
     body
         a(href='/bets/main')
             h1.logo Sanriko`s bets
-        form(method="post" class="addForm")
-            label
-                span Заголовок события
-                input(type="text" name="title" class="inputTitle" maxlength="50" required)
-            div.inputs
-                label
-                    span До
-                    input(type="text" name="until"  class="until" maxlength="5" required)
-                div.addResults
-                    label
-                        span Исход 1
-                        input(type="text" name="result1" maxlength="30" required)
-                    label
-                        span Исход 2
-                        input(type="text" name="result2" maxlength="30" required)
-            input(type="submit" value="Добавить")
-        form.addBalance(action="/addBalance" method="post")
-            p Пополнение баланса
-            input(type="list" name="username" placeholder="Имя пользователя" list="usernames")
-            input(type="text" name="sum" maxlength="30" placeholder="Сумма депозита" required)
-            input(type="submit" value="Пополнить")
-        form.writeOff(action="/writeOff" method="post")
-            p Списание баланса
-            input(type="list" name="username" placeholder="Имя пользователя" list="usernames")
-            datalist#usernames
-                each item in usernames
-                    option= item.player
-            input(type="text" name="sum" maxlength="30" placeholder="Сумма вывода" required)
-            input(type="submit" value="Списать")
+        .container
+            form(method="post" class="addForm")
+                h2 Новое событие
+                .inputBox
+                    input(type="text" name="title" class="inputTitle" placeholder="Заголовок события" maxlength="50" required)
+                .inputBox
+                    input(type="text" name="until" class="until" placeholder="Прием ставок до" maxlength="5" required)
+                .inputBox
+                    input(type="text" name="result1" placeholder="Исход 1" maxlength="30" required)
+                .inputBox
+                    input(type="text" name="result2" placeholder="Исход 2" maxlength="30" required)
+                .inputBox
+                    input(type="submit" value="Добавить")
+            form.addBalance(action="/addBalance" method="post")
+                h2 Пополнение
+                .inputBox
+                    input(type="list" name="username" placeholder="Имя пользователя" list="usernames")
+                .inputBox
+                    input(type="text" name="sum" maxlength="30" placeholder="Сумма депозита" required)
+                .inputBox
+                    input(type="submit" value="Пополнить")
+            form.writeOff(action="/writeOff" method="post")
+                h2 Списание
+                .inputBox
+                    input(type="list" name="username" placeholder="Имя пользователя" list="usernames")
+                datalist#usernames
+                    each item in usernames
+                        option= item.player
+                .inputBox
+                    input(type="text" name="sum" maxlength="30" placeholder="Сумма вывода" required)
+                .inputBox
+                    input(type="submit" value="Списать")
         if (withdraws.length < 1)
             p Нет транзакций для вывода
         else
-            ul
-                p Ожидают вывода:
-                each item in withdraws
-                    li
-                        form(name="pendingWithdraw" withDrawId=item.id_withdraw)
-                            div=item.user + ' сумма: ' + item.sum + ' статус: '
-                                p.status=item.status
-                            input(type="submit" withDrawId=item.id_withdraw value="✔")
+            .container
+                ul
+                    h2 Ожидают вывода:
+                    each item in withdraws
+                        li
+                            form(name="pendingWithdraw" withDrawId=item.id_withdraw)
+                                p= item.user + ' сумма: ' + item.sum + ' статус: ' + item.status
+                                .inputBox
+                                    input(type="submit" withDrawId=item.id_withdraw value="✔")
 
 script
     include adminsPage.js

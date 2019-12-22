@@ -6,35 +6,27 @@ const router = new Router();
 
 router
     .get('/', async(ctx) => {
-        await ctx.render('successPage');
+        ctx.redirect('/bets/main');
     })
     .get('/bets/main', async(ctx) => {
-        if (ctx.isAuthenticated()) {
-            let renderPage = await database.getAll();
-            let stats = await database.getStats();
-            await ctx.render('mainPage', {renderPage, stats})
-        } else {
-            await ctx.render('loginPage');
-            ctx.throw(401);
-        }
+        let auth = ctx.isAuthenticated();
+        let renderPage = await database.getAll();
+        let stats = await database.getStats();
+        await ctx.render('mainPage', {renderPage, stats, auth})
     })
     .get('/bets/event/:id', async(ctx) => {
-        if (ctx.isAuthenticated()) {
-            let user = ctx.state.user;
-            let renderPage = await database.getById(ctx.params.id);
-            if (!renderPage[0]) {
-                let errorText = "Эта страница удалена или еще не создана";
-                await ctx.render('errorPage', {errorText});
-                return false
-            } else {
-                let betList = await database.getTopBets(ctx.params.id);
-                let betsResult1 = await database.getBets1(ctx.params.id);
-                let betsResult2 = await database.getBets2(ctx.params.id);
-                await ctx.render('eventPage', {renderPage, betList, betsResult1, betsResult2, user})
-            }
+        let auth = ctx.isAuthenticated();
+        let user = ctx.state.user;
+        let renderPage = await database.getById(ctx.params.id);
+        if (!renderPage[0]) {
+            let errorText = "Эта страница удалена или еще не создана";
+            await ctx.render('errorPage', {errorText});
+            return false
         } else {
-            ctx.body = { success: false };
-            ctx.throw(401);
+            let betList = await database.getTopBets(ctx.params.id);
+            let betsResult1 = await database.getBets1(ctx.params.id);
+            let betsResult2 = await database.getBets2(ctx.params.id);
+            await ctx.render('eventPage', {renderPage, betList, betsResult1, betsResult2, user, auth})
         }
     })
     .post('/bets/event/:id', async(ctx) => {
@@ -44,7 +36,7 @@ router
             await database.setWinner( getResult.winner, ctx.params.id );
             ctx.redirect('/bets/event/' + ctx.params.id);
         } else {
-            ctx.body = { success: false };
+            ctx.redirect('/login');
             ctx.throw(401);
         }
     })
@@ -54,10 +46,17 @@ router
             let user = ctx.state.user.username;
             ctx.request.body.id = ctx.params.id;
             ctx.request.body.player = user;
-            try {
-                await database.writeOff(sum, user);
-            } catch (err) {
-                let errorText = "Недостаточно средств";
+            let event = await database.getById(ctx.params.id);
+            if (event[0].status === 'active') {
+                try {
+                    await database.writeOff(sum, user);
+                } catch (err) {
+                    let errorText = "Недостаточно средств";
+                    await ctx.render('errorPage', {errorText});
+                    return false
+                }
+            } else {
+                let errorText = "Прием ставок на это событие закрыт";
                 await ctx.render('errorPage', {errorText});
                 return false
             }
@@ -80,6 +79,8 @@ router
     .post('/registration', async(ctx) => {
         try {
             await database.newUser(ctx.request.body);
+            let errorText = "Регистрация прошла успешно! Теперь можно авторизоваться.";
+            await ctx.render('errorPage', {errorText});
         } catch (err) {
             let errorText = "Имя пользователя или никнейм уже занят";
             await ctx.render('errorPage', {errorText});
@@ -91,16 +92,18 @@ router
             ctx.logout();
             ctx.redirect('/login');
         } else {
-            ctx.body = { success: false };
+            ctx.redirect('/login');
             ctx.throw(401);
         }
     })
     .get('/bets/balance', async (ctx) => {
         if (ctx.isAuthenticated()) {
+            let auth = ctx.isAuthenticated();
+            let user = ctx.state.user;
             let withdraws = await database.lastWithdraws(ctx.state.user.username);
-            await ctx.render('balance', {withdraws});
+            await ctx.render('balance', {withdraws, auth});
         } else {
-            ctx.body = { success: false };
+            ctx.redirect('/login');
             ctx.throw(401);
         }
     })
@@ -142,12 +145,10 @@ router
             ctx.body = "Доступ запрещен";
             ctx.throw(401);
         }
-
     })
     .post('/writeOff', async(ctx) => {
         if (ctx.isAuthenticated()) {
-            let user;
-
+            let user = ctx.state.user;
             if (ctx.state.user.username === "Sanriko") {
                 user = ctx.request.body
             } else {

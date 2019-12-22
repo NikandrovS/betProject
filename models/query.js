@@ -8,7 +8,7 @@ const crud = {
         return query(`SELECT id, event, until, result1, SUM(bet1) as total1, result2, SUM(bet2) as total2,status
             FROM events, deposits WHERE events.id=deposits.event_id
             GROUP BY id
-            ORDER BY FIELD(status, "active") DESC, id desc
+            ORDER BY FIELD(status, "active") DESC, FIELD(status, "pending") DESC, id desc
             LIMIT 20 OFFSET 0;`);
     },
     getById: async (id) => {
